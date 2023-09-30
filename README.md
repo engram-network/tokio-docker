@@ -11,20 +11,27 @@ The development net is fully functional and allows for the deployment of smart c
 install Docker First : 
 
 ```
-curl -sSL https://get.docker.com/ | sh
+chmod +x init.sh
+./init.sh
+wait until the installation is complete
 ```
 
 Create Folder : 
 
 ```
+git clone https://github.com/engram-network/tokio-docker.git && cd tokio-docker
+./clean.sh
 mkdir -p execution consensus 
+change a few lines of code inside docker-compose.yml & docker-compose-validator.yml
+
+--identity="Geth-EF" << Change with you customize identity
+--enr-address=13.228.181.155 << Change with your public IP Address
+--graffiti=YourName << Change with your custome name
 ```
 
 Then, run:
 
 ```
-git clone https://github.com/engram-network/tokio-testnet && cd tokio-testnet
-./clean.sh
 docker compose up -d
 ```
 
@@ -57,6 +64,11 @@ INFO [09-26|19:29:21.046] Forkchoice requested sync to new head    number=30732 
 INFO [09-26|19:29:33.046] Forkchoice requested sync to new head    number=30733 hash=f80ac7..19e5f7 finalized=30652
 ```
 
+```
+If you need monitoring to see the statistics of your servers and beacon nodes, you can use graphana labs or third-party automation such as Scale3Labs.
+```
+
+![Scale3Labs](https://kavn.sgp1.digitaloceanspaces.com/sui-grafana.png)
 
 ## Available Features
 - Starts from the ALTAIR Ethereum HardFork and preparation to ALTAIR HardFork 
@@ -66,8 +78,8 @@ INFO [09-26|19:29:33.046] Forkchoice requested sync to new head    number=30733 
 
 ## TO-DO 
 
-- Setup Create Validator Deposit Address
-- Setup Docker Container Validator
-- Support Other Consensus Client
-- Support Other Execution Client
-- Support Sidechain & L2s
+- Setup Create Validator Deposit Address = Done
+- Setup Docker Container Validator = Done
+- Support Other Consensus Client = TODO
+- Support Other Execution Client = TODO
+- Support Sidechain & L2s = TODO

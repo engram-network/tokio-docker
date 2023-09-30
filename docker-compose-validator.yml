@@ -19,7 +19,7 @@ services:
       - --datadir=/mnt/engram/testnet/validator/1
       - --testnet-dir=/mnt/engram/testnet/output/custom_config_data
       - --suggested-fee-recipient=0x9999995993dd7eafd2753A4c7E35c2354B112036
-      - --graffiti=Engram-Labs
+      - --graffiti=Participate-01
       - --beacon-nodes=http://lighthouse_cl:5052
     depends_on:
       lighthouse_cl:

@@ -28,20 +28,25 @@ services:
       - --authrpc.port=8551
       - --authrpc.jwtsecret=/custom_config_data/jwtsecret
       - --datadir=/execution
-      - --identity="Geth-EF"
+      - --identity="Participate-01"
+      - --metrics
+      - --metrics.expensive
+      - --metrics.addr=0.0.0.0
+      - --metrics.port=6060
       - --networkid=130
       - --nodiscover
       - --syncmode=full
-      - --cache=4028
+      - --cache=1028
       - --rpc.allow-unprotected-txs
       - --port=30303
       - --bootnodes=enode://0468419abd5d8a4219616872a94f8c6b8fb3ea6e787280a5a3e028ae9f82c8d8546a9476221b9f593b7aab01e938efceb04fb44e80110804cd8179ab045757cb@147.75.46.253:30303?discport=0
     ports:
-      - 8551:8551
-      - 8545:8545
-      - 8546:8546
-      - 30303:30303/tcp
-      - 30303:30303/udp
+      - 8551:8551 # auth rpc api
+      - 8545:8545 # rpc json, optional, you can deactivate if you don't need
+      - 6060:6060 # metrics
+      - 9100:9100 # node exporter
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
     depends_on:
       striatum_init:
         condition: service_completed_successfully
@@ -61,18 +66,20 @@ services:
       - --http
       - --http-port=5052
       - --http-allow-sync-stalled 
-      - --http-address=127.0.0.1
+      - --http-address=0.0.0.0
       - --subscribe-all-subnets
       - --http-allow-origin=*
       - --debug-level=info
       - --datadir=/consensus
       - --testnet-dir=/custom_config_data
       - --disable-enr-auto-update
-      - --enr-address=13.228.181.155
+      - --enr-address=138.68.74.93
       - --enr-udp-port=9000
       - --enr-tcp-port=9000
       - --discovery-port=9000
       - --port=9000
+      - --metrics-address=0.0.0.0
+      - --metrics-port=5054
       - --genesis-backfill
       - --target-peers=400
       - --boot-nodes=enr:-Ly4QEcEwn9xcogpNYBMyGT1s3cVd-9OLPsgG8qHJCwt4xiKWUcKfkbNSZbWFnr8BzstF4zF2bcnzVVZ5SGt3gMd_BtFh2F0dG5ldHOI__________-EZXRoMpCcTpSPQAABMP__________gmlkgnY0gmlwhJNLLv2Jc2VjcDI1NmsxoQMba8i8sHnBQlX6YC0p7bCoStMx2wUTzH4xfnmNxz_ad4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA
@@ -83,20 +90,10 @@ services:
       striatum_el:
         condition: service_started
     ports:
-      - 5052:5052
-      - 9000:9000/tcp
-      - 9000:9000/udp
+      - 5052:5052 # ENR, optional you can deactivate if you don't need
+      - 5054:5054 # metrics
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
     volumes:
       - ./consensus:/consensus
       - ./custom_config_data:/custom_config_data
-
-  grafana:
-    image: "grafana/grafana:latest"
-    container_name: grafana_monitor
-    restart: unless-stopped
-    volumes:
-      - ./grafana/datasource.yml:/etc/grafana/provisioning/datasources/datasource.yml
-      - ./grafana/dashboards.yml:/etc/grafana/provisioning/dashboards/datasource.yml
-      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
-      - ./grafana/dashboards:/etc/dashboards
-      - ./data/grafana:/var/lib/grafana
