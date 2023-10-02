@@ -78,7 +78,7 @@ INFO Subscribed to topics    topics: ["/eth2/9c4e948f/bls_to_execution_change/ss
 - Engram Validator Deposit Adress `0x4242424242424242424242424242424242424242` This can be used to onboard new validators into the network by depositing 32 tGRAM into the contract
 <br>
 <br>
-<br>
+
 # Engram Network Validator Node Setup Guide
 This guide will walk you through the process of depositing and running node on the Engram network.
 
