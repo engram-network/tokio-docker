@@ -1,0 +1,97 @@
+version: "3.9"
+services:
+  striatum_init:
+    image: "engramnet/striatum:latest" # Sets up the genesis configuration for the striatum Engram Tokio client from a JSON file.
+    container_name: striatum_init
+    command: --datadir=/execution init /custom_config_data/genesis.json
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  striatum_el:
+    image: "engramnet/striatum:latest" # Runs the striatum execution client with the specified networks.
+    container_name: striatum_el
+    restart: on-failure
+    command:
+      - --http
+      - --http.api=eth,net,web3,engine,txpool,personal,debug,admin
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --http.vhosts=*
+      - --ws
+      - --ws.api=eth,net,web3,engine,txpool,personal,debug,admin
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.origins=*
+      - --authrpc.vhosts=*
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.port=8551
+      - --authrpc.jwtsecret=/custom_config_data/jwtsecret
+      - --datadir=/execution
+      - --metrics
+      - --metrics.expensive
+      - --metrics.addr=0.0.0.0
+      - --metrics.port=6060
+      - --identity "Your-Identity"
+      - --networkid=130
+      - --nodiscover
+      - --syncmode=full
+      - --cache=1028
+      - --rpc.allow-unprotected-txs
+      - --port=30303
+      - --bootnodes=enode://e69deb3117e877fe62fa98c5714d87680defc22815c352f433878c68890218e76c067b417aa2539354fbdf866b07b502aa20efb88326024180353b2b49ddbf7a@147.75.46.253:30304?discport=0
+    ports:
+      - 8551:8551 # auth rpc api
+      - 8545:8545 # rpc json, optional, you can deactivate if you don't need
+      - 6060:6060 # metrics
+      - 9100:9100 # node exporter
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
+    depends_on:
+      striatum_init:
+        condition: service_completed_successfully
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_cl:
+    image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse beacon chain from a specified genesis state created in the previous step
+    container_name: lighthouse_cl
+    restart: on-failure
+    command:
+      - lighthouse
+      - bn
+      - --eth1
+      - --staking
+      - --http
+      - --http-port=5052
+      - --http-allow-sync-stalled 
+      - --http-address=0.0.0.0
+      - --subscribe-all-subnets
+      - --http-allow-origin=*
+      - --debug-level=info
+      - --datadir=/consensus
+      - --testnet-dir=/custom_config_data
+      - --disable-enr-auto-update
+      - --enr-address=138.68.74.93
+      - --enr-udp-port=9000
+      - --enr-tcp-port=9000
+      - --discovery-port=9000
+      - --port=9000
+      - --genesis-backfill
+      - --target-peers=400
+      - --boot-nodes=enr:-Ly4QEcEwn9xcogpNYBMyGT1s3cVd-9OLPsgG8qHJCwt4xiKWUcKfkbNSZbWFnr8BzstF4zF2bcnzVVZ5SGt3gMd_BtFh2F0dG5ldHOI__________-EZXRoMpCcTpSPQAABMP__________gmlkgnY0gmlwhJNLLv2Jc2VjcDI1NmsxoQMba8i8sHnBQlX6YC0p7bCoStMx2wUTzH4xfnmNxz_ad4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA,enr:-Ly4QIWlxr4e4g0g826ryl0DZdL25X9HIJ9tjg8gNzpkElRsEas0haN0s7CKb3ywdy_luKde3Bz-NWDzjr2s4g73JAtFh2F0dG5ldHOI__________-EZXRoMpCcTpSPQAABMP__________gmlkgnY0gmlwhJNLLv2Jc2VjcDI1NmsxoQLuRlalLWlE3tBJ6UnBpBncr6PolNC3pIjAV3f3L9P4fIhzeW5jbmV0cw-DdGNwgiMpg3VkcIIjKQ
+      - --execution-endpoints=http://striatum_el:8551
+      - --eth1-endpoints=http://striatum_el:8545
+      - --execution-jwt=/custom_config_data/jwtsecret
+    depends_on:
+      striatum_el:
+        condition: service_started
+    ports:
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
+    volumes:
+      - ./consensus:/consensus
+      - ./custom_config_data:/custom_config_data

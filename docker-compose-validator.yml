@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+    lighthouse_vc:
+    image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse validator from a specified consensus state created in the previous step
+    container_name: lighthouse_vc
+    restart: on-failure
+    command:
+      - lighthouse
+      - vc
+      - --http
+      - --unencrypted-http-transport
+      - --init-slashing-protection
+      - --http-allow-origin=*
+      - --http-port=5062
+      - --http-address=127.0.0.1
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-allow-origin=*
+      - --datadir=/mnt/engram/testnet/validator/1
+      - --testnet-dir=/mnt/engram/testnet/output/custom_config_data
+      - --suggested-fee-recipient=0x9999995993dd7eafd2753A4c7E35c2354B112036
+      - --graffiti=Participate-01
+      - --beacon-nodes=http://lighthouse_cl:5052
+    depends_on:
+      lighthouse_cl:
+        condition: service_completed_successfully
+    ports:
+      - 5062:5062
