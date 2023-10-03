@@ -71,13 +71,27 @@ INFO Sync state updated      new_state: Synced, old_state: Syncing Head Chain, s
 INFO Subscribed to topics    topics: ["/eth2/9c4e948f/bls_to_execution_change/ssz_snappy"]
 ```
 
+```FYI: if your node is stuck unable to pull sync and losing peers, you need to stop docker then restart it. however if this solution does not solve you can replace the bootnode and noderecord here:```
+[Consensus Specification](https://github.com/engram-network/engram-specification/blob/main/custom_config_data/bootnode.txt).
+
+```
+When losing peers the normal logs will show up like this on consensus: 
+
+striatum_el
+WARN [10-03|04:50:47.133] Beacon client online, but no consensus updates received in a while. Please fix your beacon client to follow the chain! 
+WARN [10-03|04:55:47.172] Beacon client online, but no consensus updates received in a while. Please fix your beacon client to follow the chain!
+
+lighthouse_cl
+INFO Oct 03 04:59:39.001 WARN Low peer count                          peer_count: 0, service: slot_notifier
+WARN Oct 03 04:59:39.001 INFO Searching for peers                     current_slot: 78259, head_slot: 5248, finalized_epoch: 162, finalized_root: 0xa9c8…f1f7, peers: 0, service: slot_notifier
+WARN Oct 03 04:59:39.001 WARN Syncing deposit contract block cache    est_blocks_remaining: initializing deposits, service: slot_notifier
+```
+
 ## Available Features
-- Starts from the ALTAIR Ethereum HardFork and preparation to ALTAIR HardFork 
+- Starts from the Altair Fork and preparation to Deneb Fork 
 - The Striatum JSON-RPC API is available at http://striatum_el:8545
 - The Lighthouse client's REST APIs are available at http://lighthouse_cl:5052
 - Engram Validator Deposit Adress `0x4242424242424242424242424242424242424242` This can be used to onboard new validators into the network by depositing 32 tGRAM into the contract
-<br>
-<br>
 
 # Engram Network Validator Node Setup Guide
 This guide will walk you through the process of depositing and running node on the Engram network.
