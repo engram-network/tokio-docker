@@ -1,7 +1,7 @@
 version: "3.9"
 services:
   striatum_init:
-    image: "engramnet/striatum:latest" # Sets up the genesis configuration for the striatum Engram Tokio client from a JSON file.
+    image: "engramnet/striatum:tokio" # Sets up the genesis configuration for the striatum Engram Tokio client from a JSON file.
     container_name: striatum_init
     command: --datadir=/execution init /custom_config_data/genesis.json
     volumes:
@@ -9,7 +9,7 @@ services:
       - ./custom_config_data:/custom_config_data
 
   striatum_el:
-    image: "engramnet/striatum:latest" # Runs the striatum execution client with the specified networks.
+    image: "engramnet/striatum:tokio" # Runs the striatum execution client with the specified networks.
     container_name: striatum_el
     restart: on-failure
     command:
@@ -34,7 +34,7 @@ services:
       - --metrics.expensive
       - --metrics.addr=0.0.0.0
       - --metrics.port=6060
-      - --identity "Your-Identity"
+      - --identity=avenbreaks
       - --networkid=130
       - --nodiscover
       - --syncmode=full
@@ -75,7 +75,7 @@ services:
       - --datadir=/consensus
       - --testnet-dir=/custom_config_data
       - --disable-enr-auto-update
-      - --enr-address=138.68.74.93
+      - --enr-address=34.105.12.134
       - --enr-udp-port=9000
       - --enr-tcp-port=9000
       - --discovery-port=9000
