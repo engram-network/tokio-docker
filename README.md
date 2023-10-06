@@ -9,18 +9,19 @@ The development net is fully functional and allows for the deployment of smart c
 ## Using
 
 ```
-$ git clone https://github.com/engram-network/tokio-docker.git 
+$ git clone --recursive https://github.com/engram-network/tokio-docker.git 
 $ cd tokio-docker
 $ chmod +x ./scripts/*.sh
 $ bash ./scripts/init-dependency.sh
-$ mkdir -p execution consensus
+$ mkdir -p execution consensus validator
 ```
 
 Change a few lines of code inside docker-compose.yml
 
 ```
-identity "Your-Identity" << Replace with your discord username
-enr-address=xxx.xxx.xxx.xxx << Replace with your public IPAddress
+identity=avenbreaks << Replace with your discord username (e.g: avenbreaks. don't add your hastag discord user)
+enr-address=13.210.210.210 << Replace with your public IPAddress
+graffiti=engram-labs << Replace with your unique name
 ```
 
 Then, run:
@@ -71,7 +72,7 @@ INFO Sync state updated      new_state: Synced, old_state: Syncing Head Chain, s
 INFO Subscribed to topics    topics: ["/eth2/9c4e948f/bls_to_execution_change/ssz_snappy"]
 ```
 
-```FYI: if your node is stuck unable to pull sync and losing peers, you need to stop docker then restart it. however if this solution does not solve you can replace the bootnode and noderecord here:```
+```FYI: if your node is stuck unable to pull sync and losing peers, you just stop docker then restart it. however if this solution does not solve you can replace the bootnode and noderecord here:```
 [Consensus Specification](https://github.com/engram-network/engram-specification/blob/main/custom_config_data/bootnode.txt).
 
 ```
@@ -88,7 +89,7 @@ WARN Oct 03 04:59:39.001 WARN Syncing deposit contract block cache    est_blocks
 ```
 
 ## Available Features
-- Starts from the Altair Fork and preparation to Deneb Fork 
+- Starts from the Altair Fork and going to Deneb Fork 
 - The Striatum JSON-RPC API is available at http://striatum_el:8545
 - The Lighthouse client's REST APIs are available at http://lighthouse_cl:5052
 - Engram Validator Deposit Adress `0x4242424242424242424242424242424242424242` This can be used to onboard new validators into the network by depositing 32 tGRAM into the contract
