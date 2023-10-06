@@ -1,3 +1,5 @@
-consensus/*
-execution/*
-logs/*
+consensus/
+execution/
+validator/
+validator_keys/
+logs/

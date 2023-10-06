@@ -1,5 +1,14 @@
 version: "3.9"
 services:
+    lighthouse_init:
+    image: "sigp/lighthouse:v4.5.0" # Initialize and import keystore from staking_cli to lighthouse client.
+    container_name: lighthouse_init
+    command: lighthouse account validator import --testnet-dir=/custom_config_data --datadir=/validator --directory=/validator_keys --reuse-password
+    volumes:
+      - ./custom_config_data:/custom_config_data
+      - ./validator:/validator
+      - ./validator_keys:/validator_keys
+
     lighthouse_vc:
     image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse validator from a specified consensus state created in the previous step
     container_name: lighthouse_vc
@@ -12,17 +21,19 @@ services:
       - --init-slashing-protection
       - --http-allow-origin=*
       - --http-port=5062
-      - --http-address=127.0.0.1
+      - --http-address=0.0.0.0
       - --metrics
       - --metrics-address=0.0.0.0
+      - --metrics-port=5064
       - --metrics-allow-origin=*
-      - --datadir=/mnt/engram/testnet/validator/1
-      - --testnet-dir=/mnt/engram/testnet/output/custom_config_data
-      - --suggested-fee-recipient=0x9999995993dd7eafd2753A4c7E35c2354B112036
+      - --datadir=/validator
+      - --testnet-dir=/custom_config_data
+      - --suggested-fee-recipient=0x9999995993dd7eafd2753A4c7E35c2354B112036 # Change with your public key's
       - --graffiti=Participate-01
-      - --beacon-nodes=http://lighthouse_cl:5052
+      - --beacon-nodes=http://localhost:5052
     depends_on:
-      lighthouse_cl:
+      lighthouse_init:
         condition: service_completed_successfully
     ports:
       - 5062:5062
+      - 5064:5064
