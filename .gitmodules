@@ -1,0 +1,3 @@
+[submodule "engram-deposit-cli"]
+	path = engram-deposit-cli
+	url = https://github.com/engram-network/engram-deposit-cli
