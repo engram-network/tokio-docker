@@ -23,6 +23,3 @@ fi
 printf "Move All Core Pack Deposit Data...\n";
   sudo mv $HOME/go/packages/bin/eth2-val-tools /usr/local/bin
   sudo mv $HOME/go/packages/bin/ethereal /usr/local/bin
-else
-  echo "Skipping eth2-val-tools and ethereal installation."
-fi
