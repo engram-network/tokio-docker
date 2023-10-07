@@ -41,6 +41,8 @@ services:
       - --rpc.allow-unprotected-txs
       - --port=30303
       - --gcmode=archive
+      - --cache.preimages
+      - --crypto.kzg=gokzg
       - --bootnodes=enode://60745d6b88193abf2654cdb69ae5ce2b54cc3af9cc9eddaf6f968432cb958979c286cbfcc4d3a9a87b190de8e42c665e2c02b2bcccf8da3c03b36e99776ce4e5@20.46.151.217:30303?discport=0
     ports:
       - 8551:8551 # auth rpc api
