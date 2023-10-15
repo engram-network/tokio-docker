@@ -55,7 +55,16 @@ fi
 
 printf "Installing Golang Container...\n";
 if prompt_user "Do you want to install Golang?"; then
-  curl -fsSLo- https://s.id/golang-linux | bash
+  wget https://go.dev/dl/go1.21.3.linux-amd64.tar.gz
+  sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf go1.21.3.linux-amd64.tar.gz
+  echo
+  echo 
+  printf '⚠️ ADD THIS LINE BELOW TO YOUR ~/.bashrc  ⚠️
+  
+  export PATH=$PATH:/usr/local/go/bin
+\n'
+  echo "Note: Changes made to a profile file may not apply until the next time you log into your computer. To apply the changes immediately, just run the shell commands directly or execute them from the profile using a command: source $HOME/.bashrc."
+  echo
 else
   echo "Skipping Golang installation."
 fi
