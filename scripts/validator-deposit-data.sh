@@ -18,13 +18,13 @@ while read x; do
    echo "Sending deposit for validator $account_name $pubkey"
    ethereal beacon deposit \
       --allow-unknown-contract=true \
-      --address="0x4242424242424242424242424242424242424242" \
+      --address="0x11111c907e6ddfb954d5827c5b42cbca1ddc025e" \
       --connection=https://engram.tech/testnet \
       --data="$x" \
       --allow-excessive-deposit \
       --value="$amount" \
       --from="0x285F1c6671108e88684fe3A8c966464A80E4c442" \
-      --privatekey="0x6b737d36d588............6d0983ad283456889dc8fd0874" # the public key's private key
+      --privatekey="0x6b737d36d588xxxxxxxxxxxxxxxxxx6d0983ad283456889dc8fd0874" # the public key's private key
    echo "Sent deposit for validator $account_name $pubkey"
    sleep 2
 done < testnet_deposit_$smin\_$smax.txt

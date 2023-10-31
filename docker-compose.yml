@@ -33,7 +33,7 @@ services:
       - --metrics.expensive
       - --metrics.addr=0.0.0.0
       - --metrics.port=6061
-      - --identity=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
+      - --identity=trubus
       - --networkid=130
       - --syncmode=full
       - --cache=1028
@@ -75,7 +75,7 @@ services:
       - --datadir=/consensus
       - --testnet-dir=/custom_config_data
       - --disable-enr-auto-update
-      - --enr-address=13.251.165.19 # Change with your public IPAddress
+      - --enr-address=172.31.38.232
       - --enr-udp-port=9000
       - --enr-tcp-port=9000
       - --discovery-port=9000
