@@ -1,18 +1,14 @@
 #!/bin/bash
 
 printf "Installing All Dependencies...\n";
-if prompt_user "Do you want to install dependencies?"; then
-  sudo apt-get install gcc jq clang curl wget llvm chrony g++ -y
-else
-  echo "Skipping dependency installation."
-fi
+sudo apt-get install gcc jq clang curl wget llvm chrony g++ -y
 
 # Clone the asdf repository
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
 
 # Add asdf to the current shell session
-echo -e "\n. \$HOME/.asdf/asdf.sh" >> $HOME/.bashrc
-echo -e "\n. \$HOME/.asdf/completions/asdf.bash" >> $HOME/.bashrc
+echo -e . "$HOME/.asdf/asdf.sh" >> $HOME/.bashrc
+echo -e . "$HOME/.asdf/completions/asdf.bash" >> $HOME/.bashrc
 
 # Source the updated .bashrc
 source $HOME/.bashrc
@@ -22,6 +18,9 @@ echo "asdf-vm installed successfully."
 
 # Download and execute the Docker installation script
 curl -sSL https://get.docker.com/ | sh
+
+# Set Permission Docker
+sudo chmod 666 /var/run/docker.sock
 
 # Download Golang binary using asdf-vm
 asdf plugin add golang 
