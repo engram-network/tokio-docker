@@ -74,7 +74,7 @@ INFO Subscribed to topics    topics: ["/eth2/9c4e948f/bls_to_execution_change/ss
 ```
 
 ```FYI: if your node is stuck unable to pull sync and losing peers, you just stop docker then restart it. however if this solution does not solve you can replace the bootnode and noderecord here:```
-[Consensus Specification](https://github.com/engram-network/engram-specification/blob/main/custom_config_data/bootnode.txt).
+[Consensus Specification](https://stryatum.s3.ap-southeast-1.amazonaws.com/custom_config_data.tar.xz).
 
 ```
 When losing peers the normal logs will show up like this on consensus: 
