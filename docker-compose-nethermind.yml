@@ -1,0 +1,83 @@
+version: "3.9"
+services:
+  nethermind_el:
+    image: "nethermind/nethermind"
+    container_name: nethermind_el
+    restart: on-failure
+    command:
+      - --log=INFO
+      - --datadir=/execution
+      - --Init.ChainSpecPath=/custom_config_data/chainspec.json
+      - --Init.WebSocketsEnabled=true
+      - --Init.KzgSetupPath=/custom_config_data/trusted_setup.txt
+      - --config=/custom_config_data
+      - --JsonRpc.Enabled=true
+      - --JsonRpc.EnabledModules=net,eth,consensus,subscribe,web3,admin
+      - --JsonRpc.Host=0.0.0.0
+      - --JsonRpc.Port=8545
+      - --JsonRpc.WebSocketsPort=8546
+      - --JsonRpc.EngineHost=0.0.0.0
+      - --JsonRpc.EnginePort=8551
+      - --Network.DiscoveryPort=30303
+      - --Network.P2PPort=30303
+      - --JsonRpc.JwtSecretFile=/custom_config_data/jwtsecret
+      - --Network.OnlyStaticPeers=true
+      - --Metrics.Enabled=true
+      - --Metrics.ExposePort=9001
+    ports:
+      - 8551:8551 # rpc engine
+      - 8546:8546 # websocket
+      - 8545:8545 # rpc json
+      - 9001:9001 # metrics
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_cl:
+    image: "sigp/lighthouse:v4.5.0"
+    container_name: lighthouse_cl
+    restart: on-failure
+    command:
+      - lighthouse
+      - bn
+      - --eth1
+      - --staking
+      - --http
+      - --http-port=5052
+      - --http-allow-sync-stalled 
+      - --http-address=0.0.0.0
+      - --subscribe-all-subnets
+      - --http-allow-origin=*
+      - --debug-level=info
+      - --datadir=/consensus
+      - --testnet-dir=/custom_config_data
+      - --disable-enr-auto-update
+      - --enr-address=3.8.151.170 # Change with your public IPAddress
+      - --enr-udp-port=9000
+      - --enr-tcp-port=9000
+      - --discovery-port=9000
+      - --port=9002
+      - --genesis-backfill
+      - --target-peers=400
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-allow-origin=*
+      - --metrics-port=5054
+      - --graffiti=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
+      - --boot-nodes=enr:-MS4QM-MntzP5SV2kCYGAqkPRftijGUk9YLlhMjbFNmbO4UFDuh7hWOfVfXgcmt68jemKyMQwIkdZDjLSYRaxOa0265Fh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjKYlzZWNwMjU2azGhA3mfOFKLjNnqjvCNXTWNiJiaXHbF2rs3hj8hsAWZGxbViHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo
+      - --execution-endpoints=http://nethermind_el:8551
+      - --eth1-endpoints=http://nethermind_el:8545
+      - --execution-jwt=/custom_config_data/jwtsecret
+    depends_on:
+      nethermind_el:
+        condition: service_started
+    ports:
+      - 5052:5052 # ethereum node record
+      - 5054:5054 # metrics
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
+    volumes:
+      - ./consensus:/consensus
+      - ./custom_config_data:/custom_config_data

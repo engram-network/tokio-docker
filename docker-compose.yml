@@ -14,13 +14,13 @@ services:
     restart: on-failure
     command:
       - --http
-      - --http.api=eth,net,web3,engine,txpool,personal,debug,admin
+      - --http.api=admin,eth,net,web3,engine,txpool,personal,debug
       - --http.addr=0.0.0.0
       - --http.port=8545
       - --http.vhosts=*
       - --http.corsdomain=*
       - --ws
-      - --ws.api=eth,net,web3,engine,txpool,personal,debug,admin
+      - --ws.api=admin,eth,net,web3,engine,txpool,personal,debug
       - --ws.addr=0.0.0.0
       - --ws.port=8546
       - --ws.origins=*
@@ -33,19 +33,18 @@ services:
       - --metrics.expensive
       - --metrics.addr=0.0.0.0
       - --metrics.port=6061
-      - --identity=avenbreaks # Change with your discord address (e.g: ethStacker)
+      - --identity=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
       - --networkid=130
-      - --nodiscover
       - --syncmode=full
       - --cache=1028
       - --rpc.allow-unprotected-txs
       - --port=30303
-      - --gcmode=archive
+      - --gcmode=full
       - --cache.preimages
       - --crypto.kzg=gokzg
-      - --bootnodes=enode://60745d6b88193abf2654cdb69ae5ce2b54cc3af9cc9eddaf6f968432cb958979c286cbfcc4d3a9a87b190de8e42c665e2c02b2bcccf8da3c03b36e99776ce4e5@20.46.151.217:30303?discport=0
+      - --bootnodes=enode://7fb8b8c922c034de8e08c83ab332c944d15ee2283aa22ba4554fc2fe217688d25bb3629613a8e981b3aaa8c15d93b17d07da3289731637b4c87530492e52ba5f@159.223.32.178:30303
     ports:
-      - 8551:8551 # auth rpc api
+      - 8551:8551 # rpc engine
       - 8545:8545 # rpc json, optional, you can deactivate if you don't need
       - 6061:6061 # metrics
       - 30303:30303/tcp # bootnodes
@@ -87,7 +86,7 @@ services:
       - --metrics-address=0.0.0.0
       - --metrics-allow-origin=*
       - --metrics-port=5054
-      - --graffiti=avenbreaks
+      - --graffiti=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
       - --boot-nodes=enr:-MW4QE-Vk_vcG3wnfbzBy3wiuTYsKU2ogui5nUipq0S_O9O1ST2FR5E6H5Bu4EtZvpxHBhhdH6mY0smKligx7kl6AOaBiodhdHRuZXRziP__________hGV0aDKQnE6Uj0AAATD__________4JpZIJ2NIJpcIQULpfZhHF1aWOCIymJc2VjcDI1NmsxoQI8xhfkEKCy3pPhYvXslbRTTedg-Ss4L-xcamkKEo4xf4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA
       - --execution-endpoints=http://striatum_el:8551
       - --eth1-endpoints=http://striatum_el:8545

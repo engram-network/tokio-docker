@@ -1,0 +1,80 @@
+version: "3.9"
+services:
+  besu_el:
+    image: "hyperledger/besu:develop"
+    container_name: besu_el
+    restart: on-failure
+    command:
+      - --logging=INFO
+      - --genesis-file=/custom_config_data/besu.json
+      - --network-id=130
+      - --host-allowlist=*
+      - --rpc-http-enabled=true
+      - --rpc-http-host=0.0.0.0
+      - --rpc-http-port=8545
+      - --rpc-http-cors-origins=*
+      - --rpc-ws-enabled=true
+      - --rpc-ws-host=0.0.0.0
+      - --rpc-ws-port=8546
+      - --engine-rpc-enabled=true
+      - --engine-jwt-secret=/custom_config_data/jwtsecret
+      - --engine-host-allowlist=*
+      - --engine-rpc-port=8551
+      - --kzg-trusted-setup=/custom_config_data/trusted_setup.txt
+      - --bootnodes=enode://7fb8b8c922c034de8e08c83ab332c944d15ee2283aa22ba4554fc2fe217688d25bb3629613a8e981b3aaa8c15d93b17d07da3289731637b4c87530492e52ba5f@159.223.32.178:30303
+    ports:
+      - 8551:8551 # rpc engine
+      - 8545:8545 # rpc json
+      - 9001:9001 # metrics
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_cl:
+    image: "sigp/lighthouse:v4.5.0"
+    container_name: lighthouse_cl
+    restart: on-failure
+    command:
+      - lighthouse
+      - bn
+      - --eth1
+      - --staking
+      - --http
+      - --http-port=5052
+      - --http-allow-sync-stalled 
+      - --http-address=0.0.0.0
+      - --subscribe-all-subnets
+      - --http-allow-origin=*
+      - --debug-level=info
+      - --datadir=/consensus
+      - --testnet-dir=/custom_config_data
+      - --disable-enr-auto-update
+      - --enr-address=3.8.151.170 # Change with your public IPAddress
+      - --enr-udp-port=9000
+      - --enr-tcp-port=9000
+      - --discovery-port=9000
+      - --port=9002
+      - --genesis-backfill
+      - --target-peers=400
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-allow-origin=*
+      - --metrics-port=5054
+      - --graffiti=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
+      - --boot-nodes=enr:-MS4QM-MntzP5SV2kCYGAqkPRftijGUk9YLlhMjbFNmbO4UFDuh7hWOfVfXgcmt68jemKyMQwIkdZDjLSYRaxOa0265Fh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjKYlzZWNwMjU2azGhA3mfOFKLjNnqjvCNXTWNiJiaXHbF2rs3hj8hsAWZGxbViHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo
+      - --execution-endpoints=http://besu_el:8551
+      - --eth1-endpoints=http://besu_el:8545
+      - --execution-jwt=/custom_config_data/jwtsecret
+    depends_on:
+      besu_el:
+        condition: service_started
+    ports:
+      - 5052:5052 # ethereum node record
+      - 5054:5054 # metrics
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
+    volumes:
+      - ./consensus:/consensus
+      - ./custom_config_data:/custom_config_data

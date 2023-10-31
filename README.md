@@ -11,6 +11,7 @@ The development net is fully functional and allows for the deployment of smart c
 ```
 $ git clone --recursive https://github.com/engram-network/tokio-docker.git 
 $ cd tokio-docker
+$ git checkout testnet
 $ chmod +x ./scripts/*.sh
 $ bash ./scripts/init-dependency.sh
 $ mkdir -p execution consensus validator

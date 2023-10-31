@@ -1,0 +1,97 @@
+version: "3.9"
+services:
+  reth_init:
+    image: "ghcr.io/paradigmxyz/reth" # Sets up the genesis configuration for the reth Engram Tokio client from a JSON file.
+    container_name: reth_init
+    command: init --datadir=/execution --chain=custom_config_data/genesis.json
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  reth_el:
+    image: "ghcr.io/paradigmxyz/reth" # Runs the striatum execution client with the specified networks.
+    container_name: reth_el
+    restart: on-failure
+    command:
+      - node
+      - --datadir=/execution \
+      - --chain=/custom_config_data/genesis.json \
+      - --http \
+      - --http.port=8547 \
+      - --http.addr=0.0.0.0 \
+      - --http.corsdomain=* \
+      - --http.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots \
+      - --ws \
+      - --ws.addr=0.0.0.0 \
+      - --ws.port=8548 \
+      - --ws.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots \
+      - --ws.origins=* \
+      - --discovery.port=30304 \
+      - --port=30304 \
+      - --identity=reth-paradigm \ # change with your discordusername without hashtag numbers
+      - --authrpc.port=8552 \
+      - --authrpc.jwtsecret=/custom_config_data/jwtsecret \
+      - --authrpc.addr=0.0.0.0 \
+      - --metrics=0.0.0.0:9001 \
+      - --bootnodes=enode://0468419abd5d8a4219616872a94f8c6b8fb3ea6e787280a5a3e028ae9f82c8d8546a9476221b9f593b7aab01e938efceb04fb44e80110804cd8179ab045757cb@147.75.46.253:30303?discport=0 \
+      - --trusted-peers=enode://0468419abd5d8a4219616872a94f8c6b8fb3ea6e787280a5a3e028ae9f82c8d8546a9476221b9f593b7aab01e938efceb04fb44e80110804cd8179ab045757cb@147.75.46.253:30303?discport=0 \
+    ports:
+      - 8547:8547 # engine-rpc
+      - 8548:8548 # ws-api
+      - 8552:8552 # rpc-api
+      - 9001:9001 # metrics
+      - 30304:30304/tcp # bootnodes
+      - 30304:30304/udp # bootnodes
+    depends_on:
+      reth_init:
+        condition: service_completed_successfully
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_cl:
+    image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse beacon chain from a specified genesis state created in the previous step
+    container_name: lighthouse_cl
+    restart: on-failure
+    command:
+      - lighthouse
+      - bn
+      - --eth1
+      - --staking
+      - --http
+      - --http-port=5052
+      - --http-allow-sync-stalled 
+      - --http-address=0.0.0.0
+      - --subscribe-all-subnets
+      - --http-allow-origin=*
+      - --debug-level=info
+      - --datadir=/consensus
+      - --testnet-dir=/custom_config_data
+      - --disable-enr-auto-update
+      - --enr-address=13.251.165.19 # Change with your public IPAddress
+      - --enr-udp-port=9000
+      - --enr-tcp-port=9000
+      - --discovery-port=9000
+      - --port=9002
+      - --genesis-backfill
+      - --target-peers=400
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-allow-origin=*
+      - --metrics-port=5054
+      - --graffiti=avenbreaks
+      - --boot-nodes=enr:-MW4QE-Vk_vcG3wnfbzBy3wiuTYsKU2ogui5nUipq0S_O9O1ST2FR5E6H5Bu4EtZvpxHBhhdH6mY0smKligx7kl6AOaBiodhdHRuZXRziP__________hGV0aDKQnE6Uj0AAATD__________4JpZIJ2NIJpcIQULpfZhHF1aWOCIymJc2VjcDI1NmsxoQI8xhfkEKCy3pPhYvXslbRTTedg-Ss4L-xcamkKEo4xf4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA
+      - --execution-endpoints=http://reth_el:8552
+      - --eth1-endpoints=http://reth_el:8547
+      - --execution-jwt=/custom_config_data/jwtsecret
+    depends_on:
+      reth_el:
+        condition: service_started
+    ports:
+      - 5052:5052 # ethereum-node-record
+      - 5054:5054 # metrics
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
+    volumes:
+      - ./consensus:/consensus
+      - ./custom_config_data:/custom_config_data

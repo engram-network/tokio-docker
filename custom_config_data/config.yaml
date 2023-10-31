@@ -1,14 +1,14 @@
 # Extends the mainnet preset
 PRESET_BASE: 'mainnet'
-CONFIG_NAME: testnet # needs to exist because of Prysm. Otherwise it conflicts with mainnet genesis
+CONFIG_NAME: 'testnet' # needs to exist because of Prysm. Otherwise it conflicts with mainnet genesis
 
 # Genesis
 # ---------------------------------------------------------------
 # `2**14` (= 16,384)
-MIN_GENESIS_ACTIVE_VALIDATOR_COUNT: 64
+MIN_GENESIS_ACTIVE_VALIDATOR_COUNT: 120
 # Mar-01-2021 08:53:32 AM +UTC
 # This is an invalid valid and should be updated when you create the genesis
-MIN_GENESIS_TIME: 1695370005
+MIN_GENESIS_TIME: 1698332312
 GENESIS_FORK_VERSION: 0x10000130
 GENESIS_DELAY: 60
 
@@ -26,7 +26,7 @@ ALTAIR_FORK_EPOCH: 0
 BELLATRIX_FORK_VERSION: 0x30000130
 BELLATRIX_FORK_EPOCH: 0
 TERMINAL_TOTAL_DIFFICULTY: 0
-TERMINAL_BLOCK_HASH: 0xa8123229702cac054b9a44248b9a1cf00c6a047f643dcac9fcb677c5c0309b71
+TERMINAL_BLOCK_HASH: 0x0000000000000000000000000000000000000000000000000000000000000000
 TERMINAL_BLOCK_HASH_ACTIVATION_EPOCH: 18446744073709551615
 
 # Capella
@@ -58,11 +58,13 @@ INACTIVITY_SCORE_BIAS: 4
 # 2**4 (= 16)
 INACTIVITY_SCORE_RECOVERY_RATE: 16
 # 2**4 * 10**9 (= 16,000,000,000) Gwei
-EJECTION_BALANCE: 31000000000
+EJECTION_BALANCE: 16000000000
 # 2**2 (= 4)
 MIN_PER_EPOCH_CHURN_LIMIT: 4
 # 2**16 (= 65,536)
 CHURN_LIMIT_QUOTIENT: 65536
+# [New in Deneb:EIP7514] 2**3 (= 8)
+MAX_PER_EPOCH_ACTIVATION_CHURN_LIMIT: 8
 
 # Fork choice
 # ---------------------------------------------------------------
@@ -73,7 +75,7 @@ PROPOSER_SCORE_BOOST: 40
 # ---------------------------------------------------------------
 DEPOSIT_CHAIN_ID: 130
 DEPOSIT_NETWORK_ID: 130
-DEPOSIT_CONTRACT_ADDRESS: 0x6f22fFbC56eFF051aECF839396DD1eD9aD6BBA9D
+DEPOSIT_CONTRACT_ADDRESS: 0x11111c907e6ddfb954d5827c5b42cbca1ddc025e
 
 # Networking
 # ---------------------------------------------------------------
