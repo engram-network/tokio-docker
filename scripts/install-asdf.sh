@@ -23,7 +23,7 @@ curl -sSL https://get.docker.com/ | sh
 sudo chmod 666 /var/run/docker.sock
 
 # Download Golang binary using asdf-vm
-asdf plugin add golang 
+asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
 asdf install golang 1.21.3
 asdf global golang 1.21.3
 
