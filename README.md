@@ -13,26 +13,34 @@ $ git clone --recursive https://github.com/engram-network/tokio-docker.git
 $ cd tokio-docker
 $ git checkout testnet
 $ chmod +x ./scripts/*.sh
-$ bash ./scripts/init-dependency.sh
-$ mkdir -p execution consensus validator
+$ bash ./install-asdf.sh
+$ mkdir -p execution consensus
 ```
 
-Change a few lines of code inside docker-compose.yml
+#### Choose Client : 
+```
+docker-compose.yml : Stryatum - Lighthouse
+docker-compose-besu.yml : Hyperledger Besu - Lighthouse
+docker-compose-nethermind.yml : Nethermind - Lighthouse
+docker-compose-reth.yml : RustETH - Lighthouse
+```
+
+Change a few lines of code inside docker-compose.yml (if you want to use the default, and the execution options and beacon will adjust as well.)
 
 ```
 identity=avenbreaks << Replace with your discord username (e.g: avenbreaks. don't add your hastag discord user)
+
 enr-address=13.210.210.210 << Replace with your public IPAddress
-graffiti=engram-labs << Replace with your unique name
+
+graffiti=avenbreaks << Replace with your unique name
 ```
 
 Then, run:
-
 ```
 $ docker compose up -d
 ```
 
 You will see the following:
-
 ```
 $ docker compose up -d
 [+] Running 4/4
@@ -93,7 +101,7 @@ WARN Oct 03 04:59:39.001 WARN Syncing deposit contract block cache    est_blocks
 - Starts from the Altair Fork and going to Deneb Fork 
 - The Striatum JSON-RPC API is available at http://striatum_el:8545
 - The Lighthouse client's REST APIs are available at http://lighthouse_cl:5052
-- Engram Validator Deposit Adress `0x4242424242424242424242424242424242424242` This can be used to onboard new validators into the network by depositing 32 tGRAM into the contract
+- Engram Validator Deposit Adress `0x11111c907e6ddfb954d5827c5b42cbca1ddc025e` This can be used to onboard new validators into the network by depositing 32 tGRAM into the contract
 
 # Engram Network Validator Node Setup Guide
 This guide will walk you through the process of depositing and running node on the Engram network.
@@ -101,27 +109,11 @@ This guide will walk you through the process of depositing and running node on t
 ### Prerequisites
 Make sure you have ```eth2-val-tools``` and ```ethereal``` installed on your system.
 
-```bash
-$ bash ./scripts/dep-deposit.sh
-```
-
 wait until the binary installation is complete. and try to check
 
 ```sh
 $ eth2-val-tools --help
 $ ethereal version
-```
-
-If you cannot install automatically you can install manually and move the binary to the system folder, make sure you have installed golang:
-
-```console
-$ sudo apt-get install gcc jq clang llvm g++ -y
-$ go version
-$ go install github.com/protolambda/eth2-val-tools@latest
-$ go install github.com/wealdtech/ethereal@latest
-
-$ sudo mv $HOME/go/packages/bin/eth2-val-tools /usr/local/bin
-$ sudo mv $HOME/go/packages/bin/ethereal /usr/local/bin
 ```
 
 ### Deposit Steps
