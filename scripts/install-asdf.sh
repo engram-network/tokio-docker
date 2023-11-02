@@ -17,7 +17,8 @@ source $HOME/.bashrc
 echo "asdf-vm installed successfully."
 
 # Download and execute the Docker installation script
-sudo curl -sSL https://get.docker.com/ | sh
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
 
 # Set Permission Docker
 sudo chmod 666 /var/run/docker.sock
