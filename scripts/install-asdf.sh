@@ -16,13 +16,6 @@ source $HOME/.bashrc
 # Display a message indicating successful installation
 echo "asdf-vm installed successfully."
 
-# Download and execute the Docker installation script
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-
-# Set Permission Docker
-sudo chmod 666 /var/run/docker.sock
-
 # Download Golang binary using asdf-vm
 asdf plugin add golang https://github.com/asdf-community/asdf-golang.git
 asdf install golang 1.21.3
