@@ -87,7 +87,7 @@ services:
       - --metrics-allow-origin=*
       - --metrics-port=5054
       - --graffiti=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
-      - --boot-nodes=enr:-MW4QE-Vk_vcG3wnfbzBy3wiuTYsKU2ogui5nUipq0S_O9O1ST2FR5E6H5Bu4EtZvpxHBhhdH6mY0smKligx7kl6AOaBiodhdHRuZXRziP__________hGV0aDKQnE6Uj0AAATD__________4JpZIJ2NIJpcIQULpfZhHF1aWOCIymJc2VjcDI1NmsxoQI8xhfkEKCy3pPhYvXslbRTTedg-Ss4L-xcamkKEo4xf4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA
+      - --boot-nodes=enr:-MS4QM-MntzP5SV2kCYGAqkPRftijGUk9YLlhMjbFNmbO4UFDuh7hWOfVfXgcmt68jemKyMQwIkdZDjLSYRaxOa0265Fh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjKYlzZWNwMjU2azGhA3mfOFKLjNnqjvCNXTWNiJiaXHbF2rs3hj8hsAWZGxbViHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo,enr:-MS4QCqpMiJtAOVRUc0rjS_9vHDPQwf8C7lkmSpzdZ0qp__iX6t78Cb6O8DK7RUgO5GIw56qDKz6et3c9hJRUkVHl2xGh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjLIlzZWNwMjU2azGhAzoKhhH6nsT1R0NtuvmphYf_fAOh3aUiU_0EJiXmbCeGiHN5bmNuZXRzD4N0Y3CCIyuDdWRwgiMr
       - --execution-endpoints=http://striatum_el:8551
       - --eth1-endpoints=http://striatum_el:8545
       - --execution-jwt=/custom_config_data/jwtsecret
