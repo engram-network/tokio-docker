@@ -33,7 +33,7 @@ services:
       - --metrics.expensive
       - --metrics.addr=0.0.0.0
       - --metrics.port=6061
-      - --identity=trubus
+      - --identity=testnetserver
       - --networkid=130
       - --syncmode=full
       - --cache=1028
@@ -75,7 +75,7 @@ services:
       - --datadir=/consensus
       - --testnet-dir=/custom_config_data
       - --disable-enr-auto-update
-      - --enr-address=172.31.38.232
+      - --enr-address=0.0.0.0
       - --enr-udp-port=9000
       - --enr-tcp-port=9000
       - --discovery-port=9000

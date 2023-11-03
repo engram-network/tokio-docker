@@ -7,8 +7,8 @@ sudo apt-get install gcc jq clang curl wget llvm chrony g++ -y
 git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.13.1
 
 # Add asdf to the current shell session
-echo -e . "$HOME/.asdf/asdf.sh" >> $HOME/.bashrc
-echo -e . "$HOME/.asdf/completions/asdf.bash" >> $HOME/.bashrc
+. "$HOME/.asdf/asdf.sh" >> $HOME/.bashrc
+. "$HOME/.asdf/completions/asdf.bash" >> $HOME/.bashrc
 
 # Source the updated .bashrc
 source $HOME/.bashrc

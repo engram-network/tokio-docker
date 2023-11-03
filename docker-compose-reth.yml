@@ -14,34 +14,34 @@ services:
     restart: on-failure
     command:
       - node
-      - --datadir=/execution \
-      - --chain=/custom_config_data/genesis.json \
-      - --http \
-      - --http.port=8547 \
-      - --http.addr=0.0.0.0 \
-      - --http.corsdomain=* \
-      - --http.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots \
-      - --ws \
-      - --ws.addr=0.0.0.0 \
-      - --ws.port=8548 \
-      - --ws.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots \
-      - --ws.origins=* \
-      - --discovery.port=30304 \
-      - --port=30304 \
-      - --identity=reth-paradigm \ # change with your discordusername without hashtag numbers
-      - --authrpc.port=8552 \
-      - --authrpc.jwtsecret=/custom_config_data/jwtsecret \
-      - --authrpc.addr=0.0.0.0 \
-      - --metrics=0.0.0.0:9001 \
-      - --bootnodes=enode://0468419abd5d8a4219616872a94f8c6b8fb3ea6e787280a5a3e028ae9f82c8d8546a9476221b9f593b7aab01e938efceb04fb44e80110804cd8179ab045757cb@147.75.46.253:30303?discport=0 \
-      - --trusted-peers=enode://0468419abd5d8a4219616872a94f8c6b8fb3ea6e787280a5a3e028ae9f82c8d8546a9476221b9f593b7aab01e938efceb04fb44e80110804cd8179ab045757cb@147.75.46.253:30303?discport=0 \
+      - --datadir=/execution
+      - --chain=/custom_config_data/genesis.json
+      - --http
+      - --http.port=8545
+      - --http.addr=0.0.0.0
+      - --http.corsdomain=*
+      - --http.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots
+      - --ws
+      - --ws.addr=0.0.0.0
+      - --ws.port=8546
+      - --ws.api=admin,debug,eth,net,trace,txpool,web3,rpc,reth,ots
+      - --ws.origins=*
+      - --discovery.port=30303
+      - --port=30303
+      - --identity=reth-lh  # change with your discordusername without hashtag numbers
+      - --authrpc.port=8551
+      - --authrpc.jwtsecret=/custom_config_data/jwtsecret
+      - --authrpc.addr=0.0.0.0
+      - --metrics=0.0.0.0:9001
+      - --bootnodes=enode://7fb8b8c922c034de8e08c83ab332c944d15ee2283aa22ba4554fc2fe217688d25bb3629613a8e981b3aaa8c15d93b17d07da3289731637b4c87530492e52ba5f@159.223.32.178:30303
+      - --trusted-peers=enode://7fb8b8c922c034de8e08c83ab332c944d15ee2283aa22ba4554fc2fe217688d25bb3629613a8e981b3aaa8c15d93b17d07da3289731637b4c87530492e52ba5f@159.223.32.178:30303
     ports:
-      - 8547:8547 # engine-rpc
-      - 8548:8548 # ws-api
-      - 8552:8552 # rpc-api
+      - 8545:8545 # engine-rpc
+      - 8546:8546 # ws-api
+      - 8551:8551 # rpc-api
       - 9001:9001 # metrics
-      - 30304:30304/tcp # bootnodes
-      - 30304:30304/udp # bootnodes
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
     depends_on:
       reth_init:
         condition: service_completed_successfully
@@ -68,7 +68,7 @@ services:
       - --datadir=/consensus
       - --testnet-dir=/custom_config_data
       - --disable-enr-auto-update
-      - --enr-address=13.251.165.19 # Change with your public IPAddress
+      - --enr-address=0.0.0.0 # Change with your public IPAddress
       - --enr-udp-port=9000
       - --enr-tcp-port=9000
       - --discovery-port=9000
@@ -79,10 +79,10 @@ services:
       - --metrics-address=0.0.0.0
       - --metrics-allow-origin=*
       - --metrics-port=5054
-      - --graffiti=avenbreaks
-      - --boot-nodes=enr:-MW4QE-Vk_vcG3wnfbzBy3wiuTYsKU2ogui5nUipq0S_O9O1ST2FR5E6H5Bu4EtZvpxHBhhdH6mY0smKligx7kl6AOaBiodhdHRuZXRziP__________hGV0aDKQnE6Uj0AAATD__________4JpZIJ2NIJpcIQULpfZhHF1aWOCIymJc2VjcDI1NmsxoQI8xhfkEKCy3pPhYvXslbRTTedg-Ss4L-xcamkKEo4xf4hzeW5jbmV0cw-DdGNwgiMog3VkcIIjKA
-      - --execution-endpoints=http://reth_el:8552
-      - --eth1-endpoints=http://reth_el:8547
+      - --graffiti=reth-lh
+      - --boot-nodes=enr:-MS4QM-MntzP5SV2kCYGAqkPRftijGUk9YLlhMjbFNmbO4UFDuh7hWOfVfXgcmt68jemKyMQwIkdZDjLSYRaxOa0265Fh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjKYlzZWNwMjU2azGhA3mfOFKLjNnqjvCNXTWNiJiaXHbF2rs3hj8hsAWZGxbViHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo,enr:-MS4QCqpMiJtAOVRUc0rjS_9vHDPQwf8C7lkmSpzdZ0qp__iX6t78Cb6O8DK7RUgO5GIw56qDKz6et3c9hJRUkVHl2xGh2F0dG5ldHOI__________-EZXRoMpBINphZQAABMP__________gmlkgnY0gmlwhJ_fILKEcXVpY4IjLIlzZWNwMjU2azGhAzoKhhH6nsT1R0NtuvmphYf_fAOh3aUiU_0EJiXmbCeGiHN5bmNuZXRzD4N0Y3CCIyuDdWRwgiMr
+      - --execution-endpoints=http://reth_el:8551
+      - --eth1-endpoints=http://reth_el:8545
       - --execution-jwt=/custom_config_data/jwtsecret
     depends_on:
       reth_el:
