@@ -1,5 +1,7 @@
 # Engram Tokio Chain Testnet
 
+Videos How to run Node Engram : [Striatum - Lighthouse Client](https://youtu.be/mkaovEDIASo)
+
 This repository provides a docker-compose file to run a fully-functional, Testnet network for Engram Tokio with proof-of-stake enabled. This configuration uses Lighthouse as a consensus client and Striatum From Engram-Labs for execution.
 
 The development net is fully functional and allows for the deployment of smart contracts and all the features that also come with the Lighthouse consensus client such as its rich set of APIs for retrieving data from the blockchain. This development net is a great way to understand the internals of Engram proof-of-stake and to mess around with the different settings that make the system possible.
