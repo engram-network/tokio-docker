@@ -15,6 +15,7 @@ $ git clone --recursive https://github.com/engram-network/tokio-docker.git
 $ cd tokio-docker
 $ git checkout testnet
 $ chmod +x ./scripts/*.sh
+$ ./scripts/install-docker.sh
 $ ./scripts/install-asdf.sh
 $ mkdir -p execution consensus
 ```
