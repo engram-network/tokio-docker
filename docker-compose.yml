@@ -1,0 +1,146 @@
+version: "3.9"
+services:
+  striatum_init:
+    image: "engramnet/striatum:tokio" # Sets up the genesis configuration for the striatum Engram Tokio client from a JSON file.
+    container_name: striatum_init
+    command: --datadir=/execution init /custom_config_data/genesis.json
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  striatum_el:
+    image: "engramnet/striatum:tokio" # Runs the striatum execution client with the specified networks.
+    container_name: striatum_el
+    restart: on-failure
+    command:
+      - --http
+      - --http.api=eth,net,web3
+      - --http.addr=0.0.0.0
+      - --http.port=8545
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --authrpc.vhosts=*
+      - --authrpc.addr=0.0.0.0
+      - --authrpc.port=8551
+      - --authrpc.jwtsecret=/custom_config_data/jwtsecret
+      - --datadir=/execution
+      - --identity=Huemint # Change With Your userdiscord without handle or hastag
+      - --networkid=131
+      - --syncmode=full
+      - --cache=1028
+      - --rpc.allow-unprotected-txs
+      - --port=30303
+      - --gcmode=full
+      - --cache.preimages
+      - --crypto.kzg=gokzg
+      - --bootnodes=enode://d60816e110da3d306f2999c86fdf4e6bcc33c3a2829b1490a22f2c62f898516fc9759c3bfc0d22f8d68336dcfe03c7888b0e6255dd564cc99883052c4f8b56e9@13.212.180.74:30303
+    ports:
+      - 8551:8551 # rpc engine
+      - 8545:8545 # rpc json, optional, you can deactivate if you don't need
+      - 30303:30303/tcp # bootnodes
+      - 30303:30303/udp # bootnodes
+    depends_on:
+      striatum_init:
+        condition: service_completed_successfully
+    volumes:
+      - ./execution:/execution
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_cl:
+    image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse beacon chain from a specified genesis state created in the previous step
+    container_name: lighthouse_cl
+    restart: on-failure
+    command:
+      - lighthouse
+      - bn
+      - --eth1
+      - --staking
+      - --http
+      - --http-port=5052
+      - --http-allow-sync-stalled 
+      - --http-address=0.0.0.0
+      - --subscribe-all-subnets
+      - --http-allow-origin=*
+      - --debug-level=info
+      - --datadir=/consensus
+      - --testnet-dir=/custom_config_data
+      - --disable-enr-auto-update
+      - --enr-address=0.0.0.0 # Change With Your IPAddress Public
+      - --enr-udp-port=9000
+      - --enr-tcp-port=9000
+      - --discovery-port=9000
+      - --port=9002
+      - --genesis-backfill
+      - --target-peers=400
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-allow-origin=*
+      - --metrics-port=5054
+      - --graffiti=Stryatum-Docker # Change with your discord address (e.g: ethStaker)
+      - --boot-nodes=enr:-MS4QGOGlttjofgnBvfmyKIpKBLl-2OPKxLfUfKGyUlWBRnDRlU-9fYeqKP-DnySYnpK6WvCJMDmDmPs9T3-vqTCzmhFh2F0dG5ldHOI__________-EZXRoMpBc4aciQAABMf__________gmlkgnY0gmlwhDb_xcuEcXVpY4IjKYlzZWNwMjU2azGhAutHyoDBd-nvWN1DdTggz2ajo2W053uMUW7EKptXLpgDiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo,enr:-MS4QEuCFSPpDKfMn7PfBC-mdL-UR4IdDRVZ0zr3bUxfIU_OfRD5Rt3ngqFgQOTLajvBC_ul1vK3jsPktKAm1PWsVpBFh2F0dG5ldHOI__________-EZXRoMpBc4aciQAABMf__________gmlkgnY0gmlwhKpAzP-EcXVpY4IjKYlzZWNwMjU2azGhAwTGWXl8cPw1AAkRiFVl7phbt2FFIJ-vFgsW2BJFsuQFiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo,enr:-MS4QAcCGw8Pncl2Lidd51j9OjqmLNVnExPBdA71S0T4gQszL6PiZXUNTpchqGkpRGEIeRdGhI06PMMRaVOJ2JjlhVBFh2F0dG5ldHOI__________-EZXRoMpBc4aciQAABMf__________gmlkgnY0gmlwhA3UtEqEcXVpY4IjKYlzZWNwMjU2azGhAoW4WExH213eOZrOzuThMHDYqS56O5DGE4fgK8ihgR7GiHN5bmNuZXRzD4N0Y3CCIyiDdWRwgiMo
+      - --execution-endpoints=http://striatum_el:8551
+      - --eth1-endpoints=http://striatum_el:8545
+      - --execution-jwt=/custom_config_data/jwtsecret
+    depends_on:
+      striatum_el:
+        condition: service_started
+    ports:
+      - 5052:5052 # ethereum node record
+      - 5054:5054 # metrics
+      - 9000:9000/tcp # ENR port tcp
+      - 9000:9000/udp # ENR port udp
+    volumes:
+      - ./consensus:/consensus
+      - ./custom_config_data:/custom_config_data
+
+  lighthouse_init:
+    image: "sigp/lighthouse:v4.5.0" # Initialize and import keystore from staking_cli to lighthouse client.
+    container_name: lighthouse_init
+    command: 
+      - lighthouse
+      - account
+      - validator
+      - import
+      - --testnet-dir=/custom_config_data
+      - --datadir=/validator
+      - --directory=/validator_keys
+      - --password-file=/custom_config_data/password.txt
+      - --reuse-password
+    volumes:
+      - ./custom_config_data:/custom_config_data
+      - ./validator:/validator
+      - ./validator_keys:/validator_keys
+
+  lighthouse_vc:
+    image: "sigp/lighthouse:v4.5.0"  # Runs a Lighthouse validator from a specified consensus state created in the previous step
+    container_name: lighthouse_vc
+    restart: on-failure
+    command:
+      - lighthouse
+      - vc
+      - --http
+      - --unencrypted-http-transport
+      - --init-slashing-protection
+      - --http-allow-origin=*
+      - --http-port=5062
+      - --http-address=0.0.0.0
+      - --metrics
+      - --metrics-address=0.0.0.0
+      - --metrics-port=5064
+      - --metrics-allow-origin=*
+      - --datadir=/validator
+      - --testnet-dir=/custom_config_data
+      - --suggested-fee-recipient=0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 # Lyzo One
+      - --graffiti=Huemint # Change With Your Name Nodes
+      - --beacon-nodes=http://lighthouse_cl:5052
+    depends_on:
+      lighthouse_init:
+        condition: service_completed_successfully
+      lighthouse_cl:
+        condition: service_started
+    volumes:
+      - ./custom_config_data:/custom_config_data
+      - ./validator:/validator
+    ports:
+      - 5062:5062
+      - 5064:5064
