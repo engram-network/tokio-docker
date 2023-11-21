@@ -123,7 +123,7 @@ $ Please enter your mnemonic separated by spaces (" "). Note: you only need to e
 
 Add your already created mnemonic phrase to be extracted into a public key.
 
-$ Please choose the (mainnet or testnet) network/chain name ['mainnet-soon', 'goerli', 'sepolia', 'zhejiang', 'holesky', 'engram']:  [mainnet]:
+$ Please choose the (mainnet or testnet) network/chain name ['mainnet-soon', 'devnet-1', 'devnet-3', 'devnet-4', 'devnet-5', 'testnet']:  [mainnet-soon]:
 
 Choose testnet and Enter
 
