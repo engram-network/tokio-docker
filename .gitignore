@@ -1,0 +1,5 @@
+consensus/
+execution/
+validator/
+validator_keys/
+logs/
