@@ -2,7 +2,7 @@
 
 amount=32000000000
 smin=0
-smax=32
+smax=1
 
 eth2-val-tools deposit-data \
   --source-min=$smin \
