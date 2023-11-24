@@ -2,7 +2,7 @@
 
 ```bash
 Metadata
-Status: TBA
+Status: Running
 Flavor: Permissionless (Proof-of-Stake), to replace Tokio
 Linux Epoch time: 1700672400 
 Execution Version: London
