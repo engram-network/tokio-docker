@@ -34,7 +34,7 @@ services:
       - --gcmode=full
       - --cache.preimages
       - --crypto.kzg=gokzg
-      - --bootnodes=enode://b2a6c8890183af431581b34aca6b608f5de1d5facaf3f5bffe6bce2129ce3364df6b147b2a159594b074c782e06702ec0ad45785999b9f602dfe638a2b8b5515@54.255.197.203:30303,enode://d60816e110da3d306f2999c86fdf4e6bcc33c3a2829b1490a22f2c62f898516fc9759c3bfc0d22f8d68336dcfe03c7888b0e6255dd564cc99883052c4f8b56e9@13.212.180.74:30303
+      - --bootnodes=enode://29b663be8f9eebda336f8930604f477bec57d486fa3fe50a7014e392a09b2ec1789f294997783c3ec4cc7847e3f412fe35e5904fd684fc6cf34210aea1f88dc6@159.223.32.178:30303
     ports:
       - 8551:8551 # rpc engine
       - 8545:8545 # rpc json, optional, you can deactivate if you don't need
